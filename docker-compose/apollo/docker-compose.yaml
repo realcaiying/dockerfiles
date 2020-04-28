@@ -1,0 +1,56 @@
+version: "1"
+
+services:
+  apollo-portal:
+    image: registry.cn-beijing.aliyuncs.com/xinshang/apollo-portal-server:v1.6.1
+    container_name: apollo-portal
+    ports:
+      - "8070:8070"
+    environment:
+      spring.datasource.url = ""
+      spring.datasource.username = ""
+      spring.datasource.password = ""
+      dev.meta=http://apollo-configservice-dev:8080
+    depends_on:
+      - apollo-adminservice
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  apollo-configservice-dev:
+    image: registry.cn-beijing.aliyuncs.com/xinshang/apollo-config-server:v1.6.1
+    container_name: apollo-configservice-dev
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 6166
+      # DataSource Info
+      DS_URL: ""
+      DS_USERNAME: ""
+      DS_PASSWORD: ""
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  apollo-adminservice-dev:
+    image: registry-vpc.cn-beijing.aliyuncs.com/xinshang/apollo-admin-server:v1.6.1
+    container_name: apollo-adminservice-dev
+    ports:
+      - "8090:8090"
+    environment:
+      SERVER_PORT: 6167
+      # DataSource Info
+      DS_URL: ""
+      DS_USERNAME: ""
+      DS_PASSWORD: ""
+    depends_on:
+      - apollo-configservice
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
