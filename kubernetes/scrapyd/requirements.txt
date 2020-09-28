@@ -1,0 +1,10 @@
+psycopg2
+kafka_python
+Scrapy
+scrapy_redis
+Twisted
+pymongo
+requests
+itemadapter
+fake_useragent
+PyYAML

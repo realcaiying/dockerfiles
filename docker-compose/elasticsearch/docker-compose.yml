@@ -1,0 +1,41 @@
+version: '2'
+services:
+  elasticsearch:
+    image: 'bitnami/elasticsearch:7.6.2'
+    ports:
+      - '9200:9200'
+    volumes:
+      - 'elasticsearch_data:/bitnami'
+  kibana:
+    image: 'bitnami/kibana:7.6.2'
+    ports:
+      - '5601:5601'
+    volumes:
+      - 'kibana_data:/bitnami'
+    depends_on:
+      - elasticsearch
+  logstash:
+    image: 'bitnami/logstash:7.6.2'
+    environment:
+      - LOGSTASH_CONF_FILENAME=logstash.conf
+      - LOGSTASH_EXPOSE_API=yes
+      - LOGSTASH_API_PORT_NUMBER=9090
+    ports:
+      - '9090:9090'
+      - '5044:5044'
+    volumes:
+      - logstash_data:/bitnami
+    depends_on:
+      - elasticsearch
+  filebeats:
+    image: 'elastic/filebeat:7.6.2'
+    volumes:
+      - ./data:/data/log
+      - ./data/filebeat.yml:/usr/share/filebeat/filebeat.yml
+volumes:
+  elasticsearch_data:
+    driver: local
+  kibana_data:
+    driver: local
+  logstash_data:
+    driver: local
